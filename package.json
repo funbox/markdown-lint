@@ -3,25 +3,35 @@
   "version": "0.1.0",
   "description": "Markdown code style linter.",
   "main": "index.js",
+  "bin": {
+    "markdown-lint": "./cli.js"
+  },
   "scripts": {
     "lint": "eslint --cache --ext .js ./",
-    "postcommit": "git update-index --again",
-    "precommit": "lint-staged",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "ssh://git@git.funbox.ru/fcs/markdown-lint.git"
   },
-  "keywords": [
-    "markdown",
-    "linter"
-  ],
   "devDependencies": {
     "@funbox/eslint-config": "4.8.0",
     "eslint": "5.6.1",
     "husky": "1.1.1",
     "lint-staged": "7.3.0"
+  },
+  "dependencies": {
+    "commander": "2.18.0",
+    "prettier": "1.14.3",
+    "remark": "9.0.0",
+    "remark-preset-lint-markdown-style-guide": "2.1.2",
+    "vfile-reporter": "5.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "post-commit": "git update-index --again",
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
     "linters": {
