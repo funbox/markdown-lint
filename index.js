@@ -41,7 +41,9 @@ function lintFile(file) {
 }
 
 async function markdownLint({ args = [], isFix = false }) {
-  const files = args.filter(arg => /.+\.md$/i.test(arg));
+  const files = args
+    .filter(arg => /.+\.md$/i.test(arg))
+    .filter(arg => fs.existsSync(arg));
 
   if (isFix) {
     await Promise.all(files.map(async file => fixFile(file)));
