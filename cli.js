@@ -4,9 +4,11 @@ const program = require('commander');
 const markdownLint = require('.');
 
 program
-  .option('--fix', 'automatically fix problems');
+  .option('--fix', 'automatically fix problems')
+  .option('-r, --recursive', 'get files from provided directory and the entire subtree');
 
 program
+  .usage('[options] <dir> <file ...>')
   .version(require('./package').version, '-v, --version')
   .description(require('./package').description)
   .parse(process.argv);
@@ -16,6 +18,7 @@ if (!program.args.length) {
 } else {
   markdownLint({
     args: program.args,
-    isFix: program.fix,
+    fix: program.fix,
+    recursive: program.recursive,
   });
 }
