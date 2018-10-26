@@ -6,40 +6,39 @@ const remark = require('remark');
 const reporter = require('vfile-reporter');
 const styleGuide = require('remark-preset-lint-markdown-style-guide');
 
-function fixFile(filePath) {
-  const fileContent = fs.readFileSync(filePath, 'utf8');
+function fixFile(fileContent) {
   const prettyFileContent = prettier.format(fileContent, {
     parser: 'markdown',
     printWidth: 80,
     proseWrap: 'always',
   });
 
-  remark()
-    .use({
-      // `remark-stringify` settings.
+  const processor = remark()
+    .use({ // `remark-stringify` settings.
       settings: {
         listItemIndent: '1',
       },
-    })
-    .process(prettyFileContent, (error, result) => {
-      if (error) throw new Error(error);
-
-      if (result) {
-        fs.writeFileSync(filePath, result);
-      }
     });
+
+  try {
+    return processor.processSync(prettyFileContent).toString();
+  } catch (error) {
+    throw error;
+  }
 }
 
-function lintFile(filePath) {
-  const fileContent = fs.readFileSync(filePath, 'utf8');
-
+function lintFile(fileContent, filePath) {
   remark()
     .use(styleGuide)
     .process(fileContent, (error, result) => {
-      console.error(reporter(error || result, { quiet: true, defaultName: filePath }));
-
-      if (result && result.messages && result.messages.length) {
+      if (error) {
         process.exitCode = 1;
+        throw error;
+      }
+
+      if (result.messages.length) {
+        process.exitCode = 1;
+        console.error(reporter(result, { defaultName: filePath }), '\n');
       }
     });
 }
@@ -66,12 +65,20 @@ async function markdownLint({ args = [], fix = false, recursive = false }) {
     }));
   }
 
-  await Promise.all(files.map(async (file) => {
+  await Promise.all(files.map(async (filePath) => {
+    let fileContent = fs.readFileSync(filePath, 'utf8');
+
     if (fix) {
-      fixFile(file);
+      try {
+        fileContent = fixFile(fileContent);
+        fs.writeFileSync(filePath, fileContent);
+      } catch (error) {
+        process.exitCode = 1;
+        throw error;
+      }
     }
 
-    lintFile(file);
+    lintFile(fileContent, filePath);
   }));
 }
 
