@@ -6,19 +6,30 @@ const remark = require('remark');
 const reporter = require('vfile-reporter');
 const styleGuide = require('remark-preset-lint-markdown-style-guide');
 
-function fixFile(fileContent) {
-  const prettyFileContent = prettier.format(fileContent, {
-    parser: 'markdown',
-    printWidth: 80,
-    proseWrap: 'always',
-  });
+function fixFile(fileContent, externalConfig) {
+  // https://prettier.io/docs/en/options.html
+  const prettyFileContent = prettier.format(fileContent, Object.assign(
+    {
+      parser: 'markdown',
+      printWidth: 80,
+      proseWrap: 'always',
+    },
+    externalConfig && externalConfig.prettier
+      ? externalConfig.prettier
+      : {},
+  ));
 
-  const processor = remark()
-    .use({ // `remark-stringify` settings.
-      settings: {
-        listItemIndent: '1',
-      },
-    });
+  // https://github.com/remarkjs/remark/tree/master/packages/remark-stringify#options
+  const remarkStringify = {
+    settings: Object.assign(
+      { listItemIndent: '1' },
+      externalConfig && externalConfig.remark && externalConfig.remark.settings
+        ? externalConfig.remark.settings
+        : {},
+    ),
+  };
+
+  const processor = remark().use(remarkStringify);
 
   try {
     return processor.processSync(prettyFileContent).toString();
@@ -27,9 +38,10 @@ function fixFile(fileContent) {
   }
 }
 
-function lintFile(fileContent, filePath) {
+function lintFile(fileContent, filePath, externalConfig) {
   remark()
     .use(styleGuide)
+    .use(externalConfig && externalConfig.remark && externalConfig.remark.plugins)
     .process(fileContent, (error, result) => {
       if (error) {
         process.exitCode = 1;
@@ -50,12 +62,18 @@ function getFilesByPath(dir, recursive) {
   });
 }
 
-async function markdownLint({ args = [], fix = false, recursive = false }) {
+async function markdownLint({ args = [], fix = false, recursive = false, config }) {
   const dirs = args
     .filter(arg => fs.existsSync(arg) && fs.statSync(arg).isDirectory());
   const files = args
     .filter(arg => /.+\.md$/i.test(arg))
     .filter(arg => fs.existsSync(arg) && fs.statSync(arg).isFile());
+  let externalConfig;
+
+  if (config) {
+    // eslint-disable-next-line import/no-dynamic-require
+    externalConfig = require(path.resolve(config));
+  }
 
   if (dirs.length) {
     await Promise.all(dirs.map(async dir => {
@@ -70,7 +88,7 @@ async function markdownLint({ args = [], fix = false, recursive = false }) {
 
     if (fix) {
       try {
-        fileContent = fixFile(fileContent);
+        fileContent = fixFile(fileContent, externalConfig);
         fs.writeFileSync(filePath, fileContent);
       } catch (error) {
         process.exitCode = 1;
@@ -78,7 +96,7 @@ async function markdownLint({ args = [], fix = false, recursive = false }) {
       }
     }
 
-    lintFile(fileContent, filePath);
+    lintFile(fileContent, filePath, externalConfig);
   }));
 }
 
