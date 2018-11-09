@@ -4,8 +4,9 @@ const program = require('commander');
 const markdownLint = require('.');
 
 program
-  .option('--fix', 'automatically fix problems')
-  .option('-r, --recursive', 'get files from provided directory and the entire subtree');
+  .option('--fix', 'Automatically fix problems')
+  .option('-r, --recursive', 'Get files from provided directory and the entire subtree')
+  .option('-c, --config [file]', 'Use this configuration, overriding default options if present');
 
 program
   .usage('[options] <dir> <file ...>')
@@ -20,5 +21,6 @@ if (!program.args.length) {
     args: program.args,
     fix: program.fix,
     recursive: program.recursive,
+    config: program.config,
   });
 }
