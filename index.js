@@ -13,6 +13,7 @@ function fixFile(fileContent, externalConfig) {
       parser: 'markdown',
       printWidth: 80,
       proseWrap: 'always',
+      singleQuote: true,
     },
     externalConfig && externalConfig.prettier
       ? externalConfig.prettier
@@ -39,8 +40,12 @@ function fixFile(fileContent, externalConfig) {
 }
 
 function lintFile(fileContent, filePath, externalConfig) {
+  /* eslint-disable import/no-extraneous-dependencies */
   remark()
     .use(styleGuide)
+    .use(require('remark-lint-list-item-indent'), 'space')
+    .use(require('remark-lint-list-item-spacing'), { checkBlanks: true })
+    .use(require('remark-lint-ordered-list-marker-value'), 'ordered')
     .use(externalConfig && externalConfig.remark && externalConfig.remark.plugins)
     .process(fileContent, (error, result) => {
       if (error) {
@@ -53,6 +58,7 @@ function lintFile(fileContent, filePath, externalConfig) {
         console.error(reporter(result, { defaultName: filePath }), '\n');
       }
     });
+  /* eslint-enable import/no-extraneous-dependencies */
 }
 
 function getFilesByPath(dir, recursive) {
