@@ -4,17 +4,15 @@ const path = require('path');
 const prettier = require('prettier');
 const remark = require('remark');
 const reporter = require('vfile-reporter');
-const styleGuide = require('remark-preset-lint-markdown-style-guide');
+
+const appConfig = require('./.markdownlintrc');
 
 function fixFile(fileContent, externalConfig) {
   // https://prettier.io/docs/en/options.html
   const prettyFileContent = prettier.format(fileContent, Object.assign(
-    {
-      parser: 'markdown',
-      printWidth: 80,
-      proseWrap: 'always',
-      singleQuote: true,
-    },
+    appConfig && appConfig.prettier
+      ? appConfig.prettier
+      : {},
     externalConfig && externalConfig.prettier
       ? externalConfig.prettier
       : {},
@@ -23,7 +21,9 @@ function fixFile(fileContent, externalConfig) {
   // https://github.com/remarkjs/remark/tree/master/packages/remark-stringify#options
   const remarkStringify = {
     settings: Object.assign(
-      { listItemIndent: '1' },
+      appConfig && appConfig.remark && appConfig.remark.settings
+        ? appConfig.remark.settings
+        : {},
       externalConfig && externalConfig.remark && externalConfig.remark.settings
         ? externalConfig.remark.settings
         : {},
@@ -42,10 +42,7 @@ function fixFile(fileContent, externalConfig) {
 function lintFile(fileContent, filePath, externalConfig) {
   /* eslint-disable import/no-extraneous-dependencies */
   remark()
-    .use(styleGuide)
-    .use(require('remark-lint-list-item-indent'), 'space')
-    .use(require('remark-lint-list-item-spacing'), { checkBlanks: true })
-    .use(require('remark-lint-ordered-list-marker-value'), 'ordered')
+    .use(appConfig && appConfig.remark && appConfig.remark.plugins)
     .use(externalConfig && externalConfig.remark && externalConfig.remark.plugins)
     .process(fileContent, (error, result) => {
       if (error) {
