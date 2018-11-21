@@ -13,8 +13,7 @@ module.exports = {
       [require('remark-lint-ordered-list-marker-value'), 'ordered'],
     ],
 
-    // `remark-stringify`
-    settings: {
+    stringifySettings: {
       listItemIndent: '1',
     }
   }

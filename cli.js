@@ -18,7 +18,7 @@ if (!program.args.length) {
   program.help();
 } else {
   markdownLint({
-    args: program.args,
+    paths: program.args,
     fix: program.fix,
     recursive: program.recursive,
     config: program.config,
