@@ -5,102 +5,78 @@ const prettier = require('prettier');
 const remark = require('remark');
 const reporter = require('vfile-reporter');
 
+const getObjectPath = require('./utils/get-object-path');
+
 const appConfig = require('./.markdownlintrc');
 
 function fixFile(fileContent, externalConfig) {
   // https://prettier.io/docs/en/options.html
-  const prettyFileContent = prettier.format(fileContent, Object.assign(
-    appConfig && appConfig.prettier
-      ? appConfig.prettier
-      : {},
-    externalConfig && externalConfig.prettier
-      ? externalConfig.prettier
-      : {},
-  ));
+  const prettyFileContent = prettier.format(
+    fileContent,
+    Object.assign(
+      {},
+      getObjectPath(appConfig, 'prettier'),
+      getObjectPath(externalConfig, 'prettier'),
+    ),
+  );
 
   // https://github.com/remarkjs/remark/tree/master/packages/remark-stringify#options
   const remarkStringify = {
     settings: Object.assign(
-      appConfig && appConfig.remark && appConfig.remark.settings
-        ? appConfig.remark.settings
-        : {},
-      externalConfig && externalConfig.remark && externalConfig.remark.settings
-        ? externalConfig.remark.settings
-        : {},
+      {},
+      getObjectPath(appConfig, 'remark.stringifySettings'),
+      getObjectPath(externalConfig, 'remark.stringifySettings'),
     ),
   };
 
   const processor = remark().use(remarkStringify);
 
-  try {
-    return processor.processSync(prettyFileContent).toString();
-  } catch (error) {
-    throw error;
-  }
+  return processor
+    .processSync(prettyFileContent)
+    .toString();
 }
 
 function lintFile(fileContent, filePath, externalConfig) {
-  /* eslint-disable import/no-extraneous-dependencies */
   remark()
-    .use(appConfig && appConfig.remark && appConfig.remark.plugins)
-    .use(externalConfig && externalConfig.remark && externalConfig.remark.plugins)
+    .use(getObjectPath(appConfig, 'remark.plugins'))
+    .use(getObjectPath(externalConfig, 'remark.plugins'))
     .process(fileContent, (error, result) => {
-      if (error) {
-        process.exitCode = 1;
-        throw error;
-      }
+      if (error) throw error;
 
       if (result.messages.length) {
         process.exitCode = 1;
         console.error(reporter(result, { defaultName: filePath }), '\n');
       }
     });
-  /* eslint-enable import/no-extraneous-dependencies */
 }
 
 function getFilesByPath(dir, recursive) {
-  return glob.sync(recursive ? `${dir}/**/*.md` : `${dir}/*.md`, {
-    root: path.resolve(process.cwd()),
+  return glob.sync(recursive ? `${dir}/**/*.+(md|MD)` : `${dir}/*.+(md|MD)`, {
+    root: process.cwd(),
     ignore: ['./node_modules/**', '**/node_modules/**'],
   });
 }
 
-async function markdownLint({ args = [], fix = false, recursive = false, config }) {
-  const dirs = args
-    .filter(arg => fs.existsSync(arg) && fs.statSync(arg).isDirectory());
-  const files = args
-    .filter(arg => /.+\.md$/i.test(arg))
-    .filter(arg => fs.existsSync(arg) && fs.statSync(arg).isFile());
-  let externalConfig;
+function markdownLint({ paths = [], fix = false, recursive = false, config }) {
+  const dirs = paths.filter(p => fs.existsSync(p) && fs.statSync(p).isDirectory());
+  const files = paths
+    .filter(p => /.+\.md$/i.test(p) && fs.existsSync(p) && fs.statSync(p).isFile())
+    .concat(...(dirs.map(d => getFilesByPath(d, recursive))));
 
-  if (config) {
-    // eslint-disable-next-line import/no-dynamic-require
-    externalConfig = require(path.resolve(config));
-  }
+  // eslint-disable-next-line import/no-dynamic-require
+  const externalConfig = config && require(path.resolve(config));
 
-  if (dirs.length) {
-    await Promise.all(dirs.map(async dir => {
-      const filesByPath = getFilesByPath(dir, recursive);
-
-      files.push(...filesByPath);
-    }));
-  }
-
-  await Promise.all(files.map(async (filePath) => {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const filePath of files) {
     let fileContent = fs.readFileSync(filePath, 'utf8');
 
     if (fix) {
-      try {
-        fileContent = fixFile(fileContent, externalConfig);
-        fs.writeFileSync(filePath, fileContent);
-      } catch (error) {
-        process.exitCode = 1;
-        throw error;
-      }
+      fileContent = fixFile(fileContent, externalConfig);
+      fs.writeFileSync(filePath, fileContent);
     }
 
     lintFile(fileContent, filePath, externalConfig);
-  }));
+  }
 }
 
 module.exports = markdownLint;
