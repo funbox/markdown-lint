@@ -5,6 +5,7 @@ const markdownLint = require('.');
 
 program
   .option('--fix', 'Automatically fix problems')
+  .option('-t, --typograph', 'Enable typograph')
   .option('-r, --recursive', 'Get files from provided directory and the entire subtree')
   .option('-c, --config [file]', 'Use this configuration, overriding default options if present');
 
@@ -22,5 +23,6 @@ if (!program.args.length) {
     fix: program.fix,
     recursive: program.recursive,
     config: program.config,
+    typograph: program.typograph,
   });
 }

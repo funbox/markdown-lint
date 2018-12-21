@@ -16,5 +16,16 @@ module.exports = {
     stringifySettings: {
       listItemIndent: '1',
     }
+  },
+  typograf: {
+    locale: ['ru', 'en-US'],
+    enableRules: [],
+    disableRules: [
+      // these rules must be disabled to prevent incorrect typograf—markdown integration
+      'common/space/delTrailingBlanks',
+      'common/space/trimLeft',
+      'common/space/trimRight'
+    ],
+    rulesSettings: []
   }
 };

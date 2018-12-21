@@ -36,7 +36,7 @@ npm install -g @funboxteam/markdown-lint
 "lint-staged": {
   "linters": {
     "*.md": [
-      "markdown-lint --fix",
+      "markdown-lint --fix --typograph",
       "git add"
     ]
   },
@@ -63,6 +63,7 @@ markdown-lint --fix README.md
 ### Доступные флаги
 
 - `--fix` — автоматическое исправление ошибок;
+- `-t, --typograph` — оттипографить текст;
 - `-r, --recursive` — поиск md-файлов не только внутри указанной директории, но
   и во всех поддиректориях;
 - `-c, --config [file]` — подключение внешнего файла с конфигурацией линтера;
@@ -82,6 +83,10 @@ markdown-lint --fix README.md
 [remark-stringify](https://github.com/remarkjs/remark/tree/master/packages/remark-stringify#api)
 и [prettier](https://prettier.io/docs/en/index.html).
 
+Если активен флаг `--typograph`, то текст прогоняется через
+[typograf](https://github.com/typograf/typograf) и
+[eyo-kernel](https://github.com/hcodes/eyo-kernel).
+
 Для тонкой настройки линтера нужно создать файл конфигурации и с помощью флага
 `--config` указать путь до него:
 
@@ -97,6 +102,7 @@ module.exports = {
     // автоматически ограничиваем длину строки в 120 символов
     printWidth: '120'
   },
+
   remark: {
     // применяем настройки для `remark-lint`
     plugins: [
@@ -115,6 +121,20 @@ module.exports = {
       // автоматически заменяем все маркеры списка на `*`
       bullet: '*'
     }
+  },
+
+  typograf: {
+    // API настроек — https://github.com/typograf/typograf/blob/dev/docs/api_rules.md
+    // список правил — https://github.com/typograf/typograf/blob/dev/docs/RULES.ru.md
+    locale: ['ru', 'en-US'],
+    enableRules: [],
+    disableRules: [
+      // обязательное отключение следующих правил требуется для правильной работы типографа
+      'common/space/delTrailingBlanks',
+      'common/space/trimLeft',
+      'common/space/trimRight'
+    ],
+    rulesSettings: []
   }
 };
 ```

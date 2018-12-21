@@ -1,15 +1,44 @@
+const Eyo = require('eyo-kernel');
 const fs = require('fs');
 const glob = require('glob');
 const path = require('path');
 const prettier = require('prettier');
 const remark = require('remark');
 const reporter = require('vfile-reporter');
+const textr = require('remark-textr');
+const Typograf = require('typograf');
 
 const getObjectPath = require('./utils/get-object-path');
 
 const appConfig = require('./.markdownlintrc');
 
-function fixFile(fileContent, externalConfig) {
+function yoficator(string) {
+  const safeEyo = new Eyo();
+  safeEyo.dictionary.loadSafeSync();
+
+  return safeEyo.restore(string);
+}
+
+function fixTypography(string, externalConfig) {
+  const tpConfig = Object.assign(
+    {},
+    getObjectPath(appConfig, 'typograf'),
+    getObjectPath(externalConfig, 'typograf'),
+  );
+  const enableRules = tpConfig.enableRules || [];
+  const disableRules = tpConfig.disableRules || [];
+  const rulesSettings = tpConfig.rulesSettings || [];
+
+  const tp = new Typograf({ locale: tpConfig.locale });
+
+  enableRules.forEach(rule => tp.enableRule(rule));
+  disableRules.forEach(rule => tp.disableRule(rule));
+  rulesSettings.forEach(setting => tp.setSetting(...setting));
+
+  return tp.execute(string);
+}
+
+function fixFile(fileContent, { externalConfig, typograph } = {}) {
   // https://prettier.io/docs/en/options.html
   const prettyFileContent = prettier.format(
     fileContent,
@@ -30,6 +59,10 @@ function fixFile(fileContent, externalConfig) {
   };
 
   const processor = remark().use(remarkStringify);
+
+  if (typograph) {
+    processor.use(textr, { plugins: [input => fixTypography(input, externalConfig)] });
+  }
 
   return processor
     .processSync(prettyFileContent)
@@ -57,7 +90,7 @@ function getFilesByPath(dir, recursive) {
   });
 }
 
-function markdownLint({ paths = [], fix = false, recursive = false, config }) {
+function markdownLint({ paths = [], fix, recursive, config, typograph }) {
   const dirs = paths.filter(p => fs.existsSync(p) && fs.statSync(p).isDirectory());
   const files = paths
     .filter(p => /.+\.md$/i.test(p) && fs.existsSync(p) && fs.statSync(p).isFile())
@@ -71,7 +104,15 @@ function markdownLint({ paths = [], fix = false, recursive = false, config }) {
     let fileContent = fs.readFileSync(filePath, 'utf8');
 
     if (fix) {
-      fileContent = fixFile(fileContent, externalConfig);
+      fileContent = fixFile(fileContent, {
+        externalConfig,
+        typograph,
+      });
+
+      if (typograph) {
+        fileContent = yoficator(fileContent);
+      }
+
       fs.writeFileSync(filePath, fileContent);
     }
 
