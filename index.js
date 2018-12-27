@@ -7,8 +7,7 @@ const reporter = require('vfile-reporter');
 const textr = require('remark-textr');
 const Typograf = require('typograf');
 
-const { getFilesByPath } = require('./lib/utils');
-const getObjectPath = require('./utils/get-object-path');
+const { getFilesByPath, getObjectPath } = require('./lib/utils');
 
 const appConfig = require('./.markdownlintrc');
 
