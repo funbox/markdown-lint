@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 
 const fixFile = require('./lib/fix');
-const fixEyo = require('./lib/fix-eyo');
 const lintFile = require('./lib/lint');
 const { getFilesByPath } = require('./lib/utils');
 
@@ -27,10 +26,6 @@ function markdownLint({ paths = [], fix, recursive, config, typograph }) {
         externalConfig,
         typograph,
       });
-
-      if (typograph) {
-        fileContent = fixEyo(fileContent);
-      }
 
       fs.writeFileSync(filePath, fileContent);
     }
