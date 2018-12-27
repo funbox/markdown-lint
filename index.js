@@ -1,4 +1,3 @@
-const Eyo = require('eyo-kernel');
 const fs = require('fs');
 const path = require('path');
 const prettier = require('prettier');
@@ -8,15 +7,9 @@ const textr = require('remark-textr');
 const Typograf = require('typograf');
 
 const { getFilesByPath, getObjectPath } = require('./lib/utils');
+const yoficator = require('./lib/yoficator');
 
 const appConfig = require('./.markdownlintrc');
-
-function yoficator(string) {
-  const safeEyo = new Eyo();
-  safeEyo.dictionary.loadSafeSync();
-
-  return safeEyo.restore(string);
-}
 
 function fixTypography(string, externalConfig) {
   const tpConfig = Object.assign(
