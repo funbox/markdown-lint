@@ -1,6 +1,5 @@
 const Eyo = require('eyo-kernel');
 const fs = require('fs');
-const glob = require('glob');
 const path = require('path');
 const prettier = require('prettier');
 const remark = require('remark');
@@ -8,6 +7,7 @@ const reporter = require('vfile-reporter');
 const textr = require('remark-textr');
 const Typograf = require('typograf');
 
+const { getFilesByPath } = require('./lib/utils');
 const getObjectPath = require('./utils/get-object-path');
 
 const appConfig = require('./.markdownlintrc');
@@ -81,13 +81,6 @@ function lintFile(fileContent, filePath, externalConfig) {
         console.error(reporter(result, { defaultName: filePath }), '\n');
       }
     });
-}
-
-function getFilesByPath(dir, recursive) {
-  return glob.sync(recursive ? `${dir}/**/*.+(md|MD)` : `${dir}/*.+(md|MD)`, {
-    root: process.cwd(),
-    ignore: ['./node_modules/**', '**/node_modules/**'],
-  });
 }
 
 function markdownLint({ paths = [], fix, recursive, config, typograph }) {
