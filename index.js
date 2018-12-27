@@ -4,31 +4,12 @@ const prettier = require('prettier');
 const remark = require('remark');
 const reporter = require('vfile-reporter');
 const textr = require('remark-textr');
-const Typograf = require('typograf');
 
+const fixTypography = require('./lib/fix-typography');
 const { getFilesByPath, getObjectPath } = require('./lib/utils');
 const yoficator = require('./lib/yoficator');
 
 const appConfig = require('./.markdownlintrc');
-
-function fixTypography(string, externalConfig) {
-  const tpConfig = Object.assign(
-    {},
-    getObjectPath(appConfig, 'typograf'),
-    getObjectPath(externalConfig, 'typograf'),
-  );
-  const enableRules = tpConfig.enableRules || [];
-  const disableRules = tpConfig.disableRules || [];
-  const rulesSettings = tpConfig.rulesSettings || [];
-
-  const tp = new Typograf({ locale: tpConfig.locale });
-
-  enableRules.forEach(rule => tp.enableRule(rule));
-  disableRules.forEach(rule => tp.disableRule(rule));
-  rulesSettings.forEach(setting => tp.setSetting(...setting));
-
-  return tp.execute(string);
-}
 
 function fixFile(fileContent, { externalConfig, typograph } = {}) {
   // https://prettier.io/docs/en/options.html
@@ -53,7 +34,7 @@ function fixFile(fileContent, { externalConfig, typograph } = {}) {
   const processor = remark().use(remarkStringify);
 
   if (typograph) {
-    processor.use(textr, { plugins: [input => fixTypography(input, externalConfig)] });
+    processor.use(textr, { plugins: [input => fixTypography(input, { appConfig, externalConfig })] });
   }
 
   return processor
