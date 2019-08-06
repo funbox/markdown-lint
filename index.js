@@ -7,11 +7,14 @@ const { getFilesByPath } = require('./lib/utils');
 
 const appConfig = require('./.markdownlintrc');
 
-function markdownLint({ paths = [], fix, recursive, config, typograph }) {
+function markdownLint({ paths = [], fix, ext = 'md|MD', recursive, config, typograph }) {
   const dirs = paths.filter(p => fs.existsSync(p) && fs.statSync(p).isDirectory());
+  const extensions = ext.join('|');
+  const extensionsRegExp = new RegExp(`.+\\.(${extensions})$`, 'i');
+
   const files = paths
-    .filter(p => /.+\.md$/i.test(p) && fs.existsSync(p) && fs.statSync(p).isFile())
-    .concat(...(dirs.map(d => getFilesByPath(d, recursive))));
+    .filter(p => extensionsRegExp.test(p) && fs.existsSync(p) && fs.statSync(p).isFile())
+    .concat(...(dirs.map(d => getFilesByPath(d, extensions, recursive))));
 
   // eslint-disable-next-line import/no-dynamic-require
   const externalConfig = config && require(path.resolve(config));

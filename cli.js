@@ -2,12 +2,14 @@
 
 const program = require('commander');
 const markdownLint = require('.');
+const prepareExtensions = require('./lib/prepare-extensions');
 
 program
   .option('--fix', 'Automatically fix problems')
+  .option('--ext <value>', 'Set file extension, e.g. "apib". "md" by default', prepareExtensions, [])
   .option('-t, --typograph', 'Enable typograph')
   .option('-r, --recursive', 'Get files from provided directory and the entire subtree')
-  .option('-c, --config [file]', 'Use this configuration, overriding default options if present');
+  .option('-c, --config <file>', 'Use this configuration, overriding default options if present');
 
 program
   .usage('[options] <dir> <file ...>')
@@ -21,6 +23,7 @@ if (!program.args.length) {
   markdownLint({
     paths: program.args,
     fix: program.fix,
+    ext: program.ext,
     recursive: program.recursive,
     config: program.config,
     typograph: program.typograph,
