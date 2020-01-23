@@ -7,7 +7,7 @@ const { getFilesByPath } = require('./lib/utils');
 
 const appConfig = require('./.markdownlintrc');
 
-function markdownLint({ paths = [], fix, ext = 'md|MD', recursive, config, typograph }) {
+function markdownLint({ paths = [], fix, ext, recursive, config, typograph }) {
   const dirs = paths.filter(p => fs.existsSync(p) && fs.statSync(p).isDirectory());
   const extensions = ext.join('|');
   const extensionsRegExp = new RegExp(`.+\\.(${extensions})$`, 'i');
