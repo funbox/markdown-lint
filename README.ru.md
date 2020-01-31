@@ -80,6 +80,12 @@ markdown-lint --fix README.md
 [remark-lint](https://github.com/remarkjs/remark-lint) и набора правил
 [remark-preset-lint-markdown-style-guide](https://github.com/remarkjs/remark-lint/tree/master/packages/remark-preset-lint-markdown-style-guide#rules).
 
+При использовании флага `--ext` можно проверять файлы указанных расширений. Пример вызова:
+```bash
+  markdown-lint ./docs --ext apib --ext txt
+```
+Если флаг не указан, по умолчанию проверяются файлы `md`.
+
 При использовании флага `--fix` содержимое файла прогоняется через
 [remark-stringify](https://github.com/remarkjs/remark/tree/master/packages/remark-stringify#api)
 и [prettier](https://prettier.io/docs/en/index.html).
@@ -87,6 +93,24 @@ markdown-lint --fix README.md
 Если активен флаг `--typograph`, то текст прогоняется через
 [typograf](https://github.com/typograf/typograf) и
 [eyo-kernel](https://github.com/hcodes/eyo-kernel).
+
+Флаг `--recursive` позволяет искать файлы для проверки не только в указанной директории, но и в
+ее поддиректориях. Например, если структура директории выглядит так:
+
+```
+├── docs
+|   ├── api
+|   |   ├── post-entity.apib
+|   |   └── get-entity.apib
+|   └── manuals
+└──     └── manual.md
+```
+то вызов
+```bash
+markdown-lint --recursive ./docs --ext apib
+```
+
+проверит вложенные файлы `post-entity.apib`, `get-entity.apib`, `manual.md`.
 
 Для тонкой настройки линтера нужно создать файл конфигурации и с помощью флага
 `--config` указать путь до него:
