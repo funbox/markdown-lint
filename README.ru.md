@@ -19,7 +19,7 @@ npm install -g @funboxteam/markdown-lint
 
 ## Настройка проекта
 
-Для автоматической проверки md-файлов перед коммитом необходимо настроить
+Для автоматической проверки файлов перед коммитом необходимо настроить
 `husky` и `lint-staged` на работу с `markdown-lint`.
 
 Настройка производится в файле `package.json`.
@@ -53,7 +53,7 @@ npm install -g @funboxteam/markdown-lint
 # проверка файла на наличие ошибок
 markdown-lint README.md
 
-# проверка md-файлов внутри директории
+# проверка файлов внутри директории
 markdown-lint ./docs
 
 # проверка файла и автоматическое исправление ошибок
@@ -63,13 +63,13 @@ markdown-lint --fix README.md
 ### Доступные флаги
 
 - `--fix` — автоматическое исправление ошибок;
-- `--ext <value>` — указание расширений файлов; допустимо последовательное указание нескольких расширений (например, `--ext apib --ext txt`). По умолчанию `md`;
-- `-t, --typograph` — оттипографить текст;
-- `-r, --recursive` — поиск md-файлов не только внутри указанной директории, но
+- `-t, --typograph` — типографирование текста;
+- `-r, --recursive` — поиск файлов не только внутри указанной директории, но
   и во всех поддиректориях;
+- `--ext <value>` — указание расширений файлов; допустимо последовательное указание нескольких расширений, например `--ext apib --ext txt`. По умолчанию `md`;
 - `-c, --config <file>` — подключение внешнего файла с конфигурацией линтера;
 - `-v, --version` — вывод текущей версии линтера;
-- `-h, --help` – вывод справки.
+- `-h, --help` — вывод справки.
 
 ## Конфигурация линтера
 
@@ -80,19 +80,21 @@ markdown-lint --fix README.md
 [remark-lint](https://github.com/remarkjs/remark-lint) и набора правил
 [remark-preset-lint-markdown-style-guide](https://github.com/remarkjs/remark-lint/tree/master/packages/remark-preset-lint-markdown-style-guide#rules).
 
-При использовании флага `--ext` можно проверять файлы указанных расширений. Пример вызова:
-```bash
-  markdown-lint ./docs --ext apib --ext txt
-```
-Если флаг не указан, по умолчанию проверяются файлы `md`.
-
 При использовании флага `--fix` содержимое файла прогоняется через
 [remark-stringify](https://github.com/remarkjs/remark/tree/master/packages/remark-stringify#api)
 и [prettier](https://prettier.io/docs/en/index.html).
 
-Если активен флаг `--typograph`, то текст прогоняется через
+Если активен флаг `--typograph`, текст прогоняется через
 [typograf](https://github.com/typograf/typograf) и
 [eyo-kernel](https://github.com/hcodes/eyo-kernel).
+
+С помощью флага `--ext` можно задать расширение для нестандартных файлов с Markdown-разметкой:
+
+```bash
+  markdown-lint ./docs --ext apib --ext txt
+```
+
+Если флаг не указан, проверяются только файлы `.md`.
 
 Флаг `--recursive` позволяет искать файлы для проверки не только в указанной директории, но и в
 ее поддиректориях. Например, если структура директории выглядит так:
