@@ -29,7 +29,7 @@
     "remark-preset-lint-markdown-style-guide": "2.1.2",
     "remark-textr": "3.0.3",
     "typograf": "6.11.1",
-    "vfile-reporter": "5.1.1"
+    "vfile-reporter": "6.0.1"
   },
   "husky": {
     "hooks": {
