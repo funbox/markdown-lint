@@ -29,18 +29,11 @@ npm install -g @funboxteam/markdown-lint
 ```json
 "husky": {
   "hooks": {
-    "post-commit": "git update-index --again",
     "pre-commit": "lint-staged"
   }
 },
 "lint-staged": {
-  "linters": {
-    "*.md": [
-      "markdown-lint --fix --typograph",
-      "git add"
-    ]
-  },
-  "renderer": "silent"
+  "*.md": ["markdown-lint --fix --typograph"]
 }
 ```
 
