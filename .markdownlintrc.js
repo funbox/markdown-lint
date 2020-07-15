@@ -4,6 +4,13 @@ module.exports = {
     printWidth: 80,
     proseWrap: 'always',
     singleQuote: true,
+    arrowParens: 'avoid',
+    /*
+      TODO: Option `embeddedLanguageFormatting` will be available in prettier@2.1.0
+       (current version is 2.0.5), so we have to switch to prettier@next.
+       Some day after 2.1.0 release we have to switch to the stable version.
+     */
+    embeddedLanguageFormatting: 'off',
   },
   remark: {
     plugins: [
