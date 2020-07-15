@@ -40,6 +40,9 @@
   "lint-staged": {
     "*.js": [
       "eslint --fix"
+    ],
+    "*.md": [
+      "./cli.js --fix --typograph"
     ]
   }
 }
