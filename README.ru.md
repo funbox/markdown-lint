@@ -1,17 +1,17 @@
 # @funboxteam/markdown-lint
 
-**markdown-lint** — это CLI-утилита для проверки файлов с Markdown-разметкой на
+**markdown-lint** — это CLI-утилита для проверки файлов с Markdown-разметкой на
 соответствие внутренним стандартам качества отдела фронтенда.
 
 ## Установка
 
-Для установки и настройки на pre-commit хук:
+Для установки и настройки на pre-commit хук:
 
 ```bash
 npm install --dev husky lint-staged @funboxteam/markdown-lint
 ```
 
-Для глобальной установки и использования CLI-утилиты:
+Для глобальной установки и использования CLI-утилиты:
 
 ```bash
 npm install -g @funboxteam/markdown-lint
@@ -19,10 +19,10 @@ npm install -g @funboxteam/markdown-lint
 
 ## Настройка проекта
 
-Для автоматической проверки файлов перед коммитом необходимо настроить
-`husky` и `lint-staged` на работу с `markdown-lint`.
+Для автоматической проверки файлов перед коммитом необходимо настроить `husky` и
+`lint-staged` на работу с `markdown-lint`.
 
-Настройка производится в файле `package.json`.
+Настройка производится в файле `package.json`.
 
 Пример конфигурации:
 
@@ -33,13 +33,15 @@ npm install -g @funboxteam/markdown-lint
   }
 },
 "lint-staged": {
-  "*.md": ["markdown-lint --fix --typograph"]
+  "*.md": [
+    "markdown-lint --fix --typograph"
+  ]
 }
 ```
 
-## Работа с CLI
+## Работа с CLI
 
-Для ручной проверки файлов или директорий можно обращаться к `markdown-lint` из
+Для ручной проверки файлов или директорий можно обращаться к `markdown-lint` из
 командной строки:
 
 ```bash
@@ -55,44 +57,48 @@ markdown-lint --fix README.md
 
 ### Доступные флаги
 
-- `--fix` — автоматическое исправление ошибок;
-- `-t, --typograph` — типографирование текста;
-- `-r, --recursive` — поиск файлов не только внутри указанной директории, но
-  и во всех поддиректориях;
-- `--ext <value>` — указание расширений файлов; допустимо последовательное указание нескольких расширений, например `--ext apib --ext txt`. По умолчанию `md`;
-- `-c, --config <file>` — подключение внешнего файла с конфигурацией линтера;
-- `-v, --version` — вывод текущей версии линтера;
-- `-h, --help` — вывод справки.
+- `--fix` — автоматическое исправление ошибок;
+- `--ext <value>` — указание расширений файлов; допустимо последовательное
+  указание нескольких расширений, например `--ext apib --ext txt`. По умолчанию
+  `md`;
+- `-t, --typograph` — типографирование текста;
+- `-r, --recursive` — поиск файлов не только внутри указанной директории, но и
+  во всех поддиректориях;
+- `-c, --config <file>` — подключение внешнего файла с конфигурацией линтера;
+- `-v, --version` — вывод текущей версии линтера;
+- `-h, --help` — вывод справки.
 
 ## Конфигурация линтера
 
-Работа линтера основана на markdown-процессоре
+Работа линтера основана на markdown-процессоре
 [remark](https://github.com/remarkjs/remark).
 
-Линтинг производится с помощью библиотеки
-[remark-lint](https://github.com/remarkjs/remark-lint) и набора правил
-[remark-preset-lint-markdown-style-guide](https://github.com/remarkjs/remark-lint/tree/master/packages/remark-preset-lint-markdown-style-guide#rules).
+Линтинг производится с помощью библиотеки
+[remark-lint](https://github.com/remarkjs/remark-lint) и набора правил
+[remark-preset-lint-markdown-style-guide](https://github.com/remarkjs/remark-lint/tree/main/packages/remark-preset-lint-markdown-style-guide#rules).
 
 При использовании флага `--fix` содержимое файла прогоняется через
-[remark-stringify](https://github.com/remarkjs/remark/tree/master/packages/remark-stringify#api)
-и [prettier](https://prettier.io/docs/en/index.html).
+[remark-stringify](https://github.com/remarkjs/remark/tree/main/packages/remark-stringify#api)
+и [prettier](https://prettier.io/docs/en/index.html).
 
 Если активен флаг `--typograph`, текст прогоняется через
 [typograf](https://github.com/typograf/typograf) и
 [eyo-kernel](https://github.com/hcodes/eyo-kernel).
 
-С помощью флага `--ext` можно задать расширение для нестандартных файлов с Markdown-разметкой:
+С помощью флага `--ext` можно задать расширение для нестандартных файлов с
+Markdown-разметкой:
 
 ```bash
   markdown-lint ./docs --ext apib --ext txt
 ```
 
-Если флаг не указан, проверяются только файлы `.md`.
+Если флаг не указан, проверяются только файлы `.md`.
 
-Флаг `--recursive` позволяет искать файлы для проверки не только в указанной директории, но и в
-ее поддиректориях. Например, если структура директории выглядит так:
+Флаг `--recursive` позволяет искать файлы для проверки не только в указанной
+директории, но и в её поддиректориях. Например, если структура директории
+выглядит так:
 
-```
+```text
 ├── docs
 |   ├── api
 |   |   ├── post-entity.apib
@@ -100,15 +106,17 @@ markdown-lint --fix README.md
 |   └── manuals
 └──     └── manual.md
 ```
-то вызов
+
+то вызов
+
 ```bash
 markdown-lint --recursive ./docs --ext apib
 ```
 
 проверит вложенные файлы `post-entity.apib`, `get-entity.apib`, `manual.md`.
 
-Для тонкой настройки линтера нужно создать файл конфигурации и с помощью флага
-`--config` указать путь до него:
+Для тонкой настройки линтера нужно создать файл конфигурации и с помощью флага
+`--config` указать путь до него:
 
 ```bash
 markdown-lint --fix --config ~/.markdownlintrc.js README.md
@@ -161,7 +169,7 @@ module.exports = {
 
 ## Пример работы
 
-### До обработки с флагом `--fix`
+### До обработки с флагом `--fix`
 
 ```markdown
 # Данные для выполнения сценариев
