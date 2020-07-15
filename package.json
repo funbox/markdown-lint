@@ -8,6 +8,7 @@
   },
   "scripts": {
     "lint-js": "eslint .",
+    "lint-md": "./cli.js -r .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
