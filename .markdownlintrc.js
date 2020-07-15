@@ -22,6 +22,7 @@ module.exports = {
 
     stringifySettings: {
       listItemIndent: '1',
+      fences: true,
     }
   },
   typograf: {
