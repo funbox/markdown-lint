@@ -1,15 +1,21 @@
 # @funboxteam/markdown-lint
 
-**markdown-lint** — это CLI-утилита для проверки файлов с Markdown-разметкой на
-соответствие внутренним стандартам качества отдела фронтенда.
+[![npm](https://img.shields.io/npm/v/@funboxteam/markdown-lint.svg)](https://www.npmjs.com/package/@funboxteam/markdown-lint)
+
+Консольная утилита для проверки Markdown-файлов на соответствие указанным
+стандартам качества.
+
+## Мотивация
+
+Порой репозитории с проектами содержат большое количество файлов с
+документацией. Однажды мы решили начать проверять грамматику и орфографию в
+таких файлах, и создали для этих целей
+[languagetool-node](https://github.com/funbox/languagetool-node).
+
+В то же время мы решили проверять синтаксис Markdown-файлов, как мы проверяем
+JS, CSS и иные файлы проекта. Потому создали этот линтер.
 
 ## Установка
-
-Для установки и настройки на pre-commit хук:
-
-```bash
-npm install --dev husky lint-staged @funboxteam/markdown-lint
-```
 
 Для глобальной установки и использования CLI-утилиты:
 
@@ -17,25 +23,31 @@ npm install --dev husky lint-staged @funboxteam/markdown-lint
 npm install -g @funboxteam/markdown-lint
 ```
 
+Для установки и настройки на pre-commit хук:
+
+```bash
+npm install --dev husky lint-staged @funboxteam/markdown-lint
+```
+
 ## Настройка проекта
 
 Для автоматической проверки файлов перед коммитом необходимо настроить `husky` и
-`lint-staged` на работу с `markdown-lint`.
-
-Настройка производится в файле `package.json`.
+`lint-staged` на работу с `markdown-lint` в `package.json` вашего проекта.
 
 Пример конфигурации:
 
 ```json
-"husky": {
-  "hooks": {
-    "pre-commit": "lint-staged"
+{
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.md": [
+      "markdown-lint --fix --typograph"
+    ]
   }
-},
-"lint-staged": {
-  "*.md": [
-    "markdown-lint --fix --typograph"
-  ]
 }
 ```
 
@@ -48,8 +60,11 @@ npm install -g @funboxteam/markdown-lint
 # проверка файла на наличие ошибок
 markdown-lint README.md
 
-# проверка файлов внутри директории
+# проверка файлов внутри директории (без поиска в поддиректориях)
 markdown-lint ./docs
+
+# проверка файлов внутри директории (с поиском в поддиректориях)
+markdown-lint -r ./docs
 
 # проверка файла и автоматическое исправление ошибок
 markdown-lint --fix README.md
@@ -70,50 +85,12 @@ markdown-lint --fix README.md
 
 ## Конфигурация линтера
 
-Работа линтера основана на markdown-процессоре
+Работа линтера основана на Markdown-процессоре
 [remark](https://github.com/remarkjs/remark).
 
 Линтинг производится с помощью библиотеки
 [remark-lint](https://github.com/remarkjs/remark-lint) и набора правил
 [remark-preset-lint-markdown-style-guide](https://github.com/remarkjs/remark-lint/tree/main/packages/remark-preset-lint-markdown-style-guide#rules).
-
-При использовании флага `--fix` содержимое файла прогоняется через
-[remark-stringify](https://github.com/remarkjs/remark/tree/main/packages/remark-stringify#api)
-и [prettier](https://prettier.io/docs/en/index.html).
-
-Если активен флаг `--typograph`, текст прогоняется через
-[typograf](https://github.com/typograf/typograf) и
-[eyo-kernel](https://github.com/hcodes/eyo-kernel).
-
-С помощью флага `--ext` можно задать расширение для нестандартных файлов с
-Markdown-разметкой:
-
-```bash
-  markdown-lint ./docs --ext apib --ext txt
-```
-
-Если флаг не указан, проверяются только файлы `.md`.
-
-Флаг `--recursive` позволяет искать файлы для проверки не только в указанной
-директории, но и в её поддиректориях. Например, если структура директории
-выглядит так:
-
-```text
-├── docs
-|   ├── api
-|   |   ├── post-entity.apib
-|   |   └── get-entity.apib
-|   └── manuals
-└──     └── manual.md
-```
-
-то вызов
-
-```bash
-markdown-lint --recursive ./docs --ext apib
-```
-
-проверит вложенные файлы `post-entity.apib`, `get-entity.apib`, `manual.md`.
 
 Для тонкой настройки линтера нужно создать файл конфигурации и с помощью флага
 `--config` указать путь до него:
@@ -126,13 +103,14 @@ markdown-lint --fix --config ~/.markdownlintrc.js README.md
 
 ```javascript
 module.exports = {
+  // prettier обрабатывает тексты, когда `--fix` передан
   prettier: {
     // автоматически ограничиваем длину строки в 120 символов
     printWidth: '120'
   },
 
   remark: {
-    // применяем настройки для `remark-lint`
+    // применяем настройки для remark-lint
     plugins: [
       // объявляем линтеру, что максимальная длина строки теперь равна 120 символам
       [require('remark-lint-maximum-line-length'), 120],
@@ -144,7 +122,7 @@ module.exports = {
       [require('remark-lint-unordered-list-marker-style'), '*']
     ],
 
-    // применяем настройки для `remark-stringify`
+    // remark-stringify обрабатывает тексты, когда `--fix` передан
     stringifySettings: {
       // автоматически заменяем все маркеры списка на `*`
       bullet: '*'
@@ -172,46 +150,52 @@ module.exports = {
 ### До обработки с флагом `--fix`
 
 ```markdown
-# Данные для выполнения сценариев
+Linux kernel
+============
 
-__Регистрация__
+There are several guides for kernel developers and users. These guides can be rendered in a number of formats, like HTML and PDF. Please read Documentation/admin-guide/README.rst first.
 
-* номер: `9000000000  `, код выводится через  ` alert `
+In order to build the documentation, use ``make htmldocs`` or ``make pdfdocs``.  The formatted documentation can also be read online at:
 
-**Авторизация**
+    https://www.kernel.org/doc/html/latest/
 
-* номер: `  9050000000 `, пароль: `password`
-* номер: `9000000001`, пароль: `password`
-* новый пароль: `novice`
+There are various text files in the Documentation/ subdirectory, several of them using the Restructured Text markup notation.
 
-__Отписка от сервиса__
+Please read the Documentation/process/changes.rst file, as it contains the requirements for building and running the kernel, and information about the problems which may result by upgrading your kernel.
 
-* подписанный аккаунт, номер: `9000000002`, пароль: `password`
+__Useful links__
 
-При переходе на страницу `/unsubscription` произойдёт отписка и сообщение об этом со ссылкой на главную, после перехода на главную и возвращения (без обновления страницы, кнопкой «Назад») на `/unsubscribed` будет сообщение, что пользователь отписан и ссылка на подписку.
+* [Linux kernel licensing rules](https://www.kernel.org/doc/html/latest/process/license-rules.html#kernel-licensing)
+* [Reporting bugs](https://www.kernel.org/doc/html/latest/admin-guide/reporting-bugs.html)
 ```
 
 ### После обработки
 
-```markdown
-# Данные для выполнения сценариев
+````markdown
+# Linux kernel
 
-**Регистрация**
+There are several guides for kernel developers and users. These guides can be
+rendered in a number of formats, like HTML and PDF. Please read
+Documentation/admin-guide/README.rst first.
 
-- номер: `9000000000`, код выводится через `alert`
+In order to build the documentation, use `make htmldocs` or `make pdfdocs`. The
+formatted documentation can also be read online at:
 
-**Авторизация**
-
-- номер: `9050000000`, пароль: `password`
-- номер: `9000000001`, пароль: `password`
-- новый пароль: `novice`
-
-**Отписка от сервиса**
-
-- подписанный аккаунт, номер: `9000000002`, пароль: `password`
-
-При переходе на страницу `/unsubscription` произойдёт отписка и сообщение об
-этом со ссылкой на главную, после перехода на главную и возвращения (без
-обновления страницы, кнопкой «Назад») на `/unsubscribed` будет сообщение, что
-пользователь отписан и ссылка на подписку.
 ```
+https://www.kernel.org/doc/html/latest/
+```
+
+There are various text files in the Documentation/ subdirectory, several of them
+using the Restructured Text markup notation.
+
+Please read the Documentation/process/changes.rst file, as it contains the
+requirements for building and running the kernel, and information about the
+problems which may result by upgrading your kernel.
+
+**Useful links**
+
+- [Linux kernel licensing rules](https://www.kernel.org/doc/html/latest/process/license-rules.html#kernel-licensing)
+- [Reporting bugs](https://www.kernel.org/doc/html/latest/admin-guide/reporting-bugs.html)
+````
+
+[![Sponsored by FunBox](https://funbox.ru/badges/sponsored_by_funbox_centered.svg)](https://funbox.ru)
