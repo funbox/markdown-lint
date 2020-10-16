@@ -12,6 +12,12 @@
   "bin": {
     "markdown-lint": "./cli.js"
   },
+  "files": [
+    "lib/",
+    ".markdownlintrc.js",
+    "cli.js",
+    "index.js"
+  ],
   "scripts": {
     "lint-js": "eslint .",
     "lint-md": "./cli.js -r .",
