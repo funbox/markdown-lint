@@ -2,6 +2,12 @@
   "name": "@funboxteam/markdown-lint",
   "version": "1.2.0",
   "description": "Markdown code style linter",
+  "license": "MIT",
+  "author": "Andrey Ivanov (https://github.com/343dev)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/funbox/markdown-lint"
+  },
   "main": "index.js",
   "bin": {
     "markdown-lint": "./cli.js"
@@ -11,10 +17,6 @@
     "lint-md": "./cli.js -r .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "markdown",
-    "linter"
-  ],
   "devDependencies": {
     "@funboxteam/eslint-config": "5.1.0",
     "eslint": "5.16.0",
