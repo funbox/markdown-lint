@@ -1,7 +1,7 @@
 {
   "name": "@funboxteam/markdown-lint",
   "version": "1.2.0",
-  "description": "Markdown code style linter.",
+  "description": "Markdown code style linter",
   "main": "index.js",
   "bin": {
     "markdown-lint": "./cli.js"
@@ -16,7 +16,7 @@
     "linter"
   ],
   "devDependencies": {
-    "@funboxteam/eslint-config": "4.14.0",
+    "@funboxteam/eslint-config": "5.1.0",
     "eslint": "5.16.0",
     "husky": "4.2.5",
     "lint-staged": "10.2.11"
@@ -25,7 +25,7 @@
     "commander": "5.1.0",
     "eyo-kernel": "2.5.6",
     "glob": "7.1.6",
-    "prettier": "github:prettier/prettier",
+    "prettier": "2.1.2",
     "remark": "12.0.0",
     "remark-preset-lint-markdown-style-guide": "3.0.1",
     "remark-textr": "4.0.0",
