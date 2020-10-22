@@ -9,6 +9,10 @@
 Консольная утилита для проверки Markdown-файлов на соответствие указанным
 стандартам качества.
 
+Основана на [Prettier](https://github.com/prettier/prettier),
+[Remark](https://github.com/remarkjs/remark) и
+[Typograf](https://github.com/typograf/typograf).
+
 ## Мотивация
 
 Порой репозитории с проектами содержат большое количество файлов с

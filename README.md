@@ -8,6 +8,10 @@
 
 Markdown code style linter that makes your documentation looks nicer.
 
+It’s based on [Prettier](https://github.com/prettier/prettier),
+[Remark](https://github.com/remarkjs/remark) &
+[Typograf](https://github.com/typograf/typograf).
+
 [По-русски](./README.ru.md)
 
 ## Rationale
