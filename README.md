@@ -1,8 +1,12 @@
 # @funboxteam/markdown-lint
 
+<img align="right" width="192" height="159"
+     alt="Avatar: Shiny Markdown logo with a sparkle"
+     src="./logo.png">
+
 [![npm](https://img.shields.io/npm/v/@funboxteam/markdown-lint.svg)](https://www.npmjs.com/package/@funboxteam/markdown-lint)
 
-Markdown code style linter.
+Markdown code style linter that makes your documentation looks nicer.
 
 [По-русски](./README.ru.md)
 
@@ -196,5 +200,10 @@ problems which may result by upgrading your kernel.
 - [Linux kernel licensing rules](https://www.kernel.org/doc/html/latest/process/license-rules.html#kernel-licensing)
 - [Reporting bugs](https://www.kernel.org/doc/html/latest/admin-guide/reporting-bugs.html)
 ````
+
+## Credits
+
+Shiny picture for the project was made by
+[Igor Garybaldi](https://pandabanda.com/).
 
 [![Sponsored by FunBox](https://funbox.ru/badges/sponsored_by_funbox_centered.svg)](https://funbox.ru)

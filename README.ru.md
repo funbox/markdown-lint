@@ -1,5 +1,9 @@
 # @funboxteam/markdown-lint
 
+<img align="right" width="192" height="159"
+     alt="Аватар: Яркое градиентное лого Markdown со звёздочкой"
+     src="./logo.png">
+
 [![npm](https://img.shields.io/npm/v/@funboxteam/markdown-lint.svg)](https://www.npmjs.com/package/@funboxteam/markdown-lint)
 
 Консольная утилита для проверки Markdown-файлов на соответствие указанным
@@ -197,5 +201,10 @@ problems which may result by upgrading your kernel.
 - [Linux kernel licensing rules](https://www.kernel.org/doc/html/latest/process/license-rules.html#kernel-licensing)
 - [Reporting bugs](https://www.kernel.org/doc/html/latest/admin-guide/reporting-bugs.html)
 ````
+
+## Благодарности
+
+Яркую картинку для репозитория нарисовал
+[Игорь Гарибальди](https://pandabanda.com/).
 
 [![Sponsored by FunBox](https://funbox.ru/badges/sponsored_by_funbox_centered.svg)](https://funbox.ru)
