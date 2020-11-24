@@ -13,10 +13,12 @@ module.exports = {
       [require('remark-lint-list-item-indent'), 'space'],
       [require('remark-lint-list-item-spacing'), { checkBlanks: true }],
       [require('remark-lint-ordered-list-marker-value'), 'ordered'],
+      [require('remark-lint-emphasis-marker'), 'consistent'],
     ],
 
     stringifySettings: {
-      listItemIndent: '1',
+      bullet: '-',
+      listItemIndent: 'one',
       fences: true,
     }
   },
