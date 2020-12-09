@@ -1,8 +1,8 @@
 # @funboxteam/markdown-lint
 
 <img align="right" width="192" height="159"
-     alt="Avatar: Shiny Markdown logo with a sparkle"
-     src="./logo.png">
+  alt="Avatar: Shiny Markdown logo with a sparkle"
+  src="./logo.png">
 
 [![npm](https://img.shields.io/npm/v/@funboxteam/markdown-lint.svg)](https://www.npmjs.com/package/@funboxteam/markdown-lint)
 
@@ -85,7 +85,7 @@ markdown-lint --fix README.md
 - `-t, --typograph` — run typograph over the text inside the files.
 - `-r, --recursive` — search for files in the subdirectories of the passed
   directory.
-- `-c, --config <file>` — use external config file instead of default one.
+- `-c, --config <file>` — use external config file to extend the default one.
 - `-v, --version` — show current tool version.
 - `-h, --help` — show help.
 
