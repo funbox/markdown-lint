@@ -1,6 +1,6 @@
 {
   "name": "@funboxteam/markdown-lint",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Markdown code style linter",
   "license": "MIT",
   "author": "Andrey Ivanov (https://github.com/343dev)",
