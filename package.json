@@ -21,6 +21,7 @@
   "scripts": {
     "lint-js": "eslint .",
     "lint-md": "./cli.js -r .",
+    "prepublishOnly": "lawyer",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
