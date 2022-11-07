@@ -22,7 +22,7 @@
     "lint-js": "eslint .",
     "lint-md": "./cli.js -r .",
     "lint": "npm run lint-js && npm run lint-md",
-    "prepublishOnly": "lawyer",
+    "prepublishOnly": "if [ -z \"$CI\" ]; then lawyer; fi",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
