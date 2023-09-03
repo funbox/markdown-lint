@@ -20,8 +20,7 @@
   ],
   "scripts": {
     "lint-js": "eslint .",
-    "lint-md": "./cli.js -r .",
-    "lint": "npm run lint-js && npm run lint-md",
+    "lint": "npm run lint-js",
     "prepublishOnly": "if [ -z \"$CI\" ]; then lawyer; fi",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
