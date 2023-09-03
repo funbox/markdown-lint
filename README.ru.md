@@ -1,3 +1,7 @@
+# ⛔ РЕПОЗИТОРИЙ НЕ ПОДДЕРЖИВАЕТСЯ
+
+Разработка будет продолжена в репозитории <https://github.com/343dev/markdown-lint>.
+
 # @funboxteam/markdown-lint
 
 <img align="right" width="192" height="159"
