@@ -1,3 +1,7 @@
+# ⛔ THIS REPO IS UNMAINTAINED
+
+Future development moved to <https://github.com/343dev/markdown-lint>.
+
 # @funboxteam/markdown-lint
 
 <img align="right" width="192" height="159"
